@@ -26,7 +26,14 @@
 # Here's a list that we will use to test this program:
 # my_list = ['gtaccgt', 'gtaccca', 'ttacatg', 'acgggac']
 
-def t_finder(some_list):
+from typing import List, Tuple, Optional
+
+# Constants
+GC_RICH_THRESHOLD = 55.0  # Percentage threshold for GC-rich sequences
+START_CODON = 'atg'
+
+
+def t_finder(some_list: List[str]) -> int:
     ''' finds number of strings with >= 2 ts (case-insensitive)'''
     
     counter = 0
@@ -39,7 +46,7 @@ def t_finder(some_list):
     return counter
 
 
-def GC_maker(some_list):
+def GC_maker(some_list: List[str]) -> List[int]:
     '''finds GC content of strings in a list (case-insensitive)'''  
 
     GC_results = []
@@ -54,12 +61,16 @@ def GC_maker(some_list):
     return GC_results
 
 
-def GC_rich(some_list):
-    '''finds GC rich strings in a list (case-insensitive, threshold >= 55%)'''
+def GC_rich(some_list: List[str], threshold: float = GC_RICH_THRESHOLD) -> List[float]:
+    '''Finds GC rich strings in a list (case-insensitive, threshold >= 55% by default).
     
-    # this function uses the round() function
-    # round() shortens a float to fewer digits
-
+    Args:
+        some_list: List of DNA sequence strings
+        threshold: GC percentage threshold (default: 55.0)
+        
+    Returns:
+        List of GC percentages for sequences meeting the threshold
+    '''
     GC_much = []
 
     for seq in some_list:
@@ -70,41 +81,45 @@ def GC_rich(some_list):
         num_gs = seq_lower.count('g')
         GC_count = num_cs + num_gs
         GC_perc = 100 * (GC_count / len(seq))
-        if GC_perc >= 55:
+        if GC_perc >= threshold:
             GC_much.append(round(GC_perc, 2))
 
     return GC_much
 
 
-def string_start(seq):
-    '''checks string for potential start codon (case-insensitive)
+def string_start(seq: str) -> Tuple[bool, Optional[int]]:
+    '''Checks string for potential start codon (case-insensitive).
     
+    Args:
+        seq: DNA sequence string to search
+        
     Returns:
-        tuple: (found: bool, location: int or None)
+        Tuple of (found: bool, location: Optional[int])
             found: True if start codon found, False otherwise
             location: Index of start codon if found, None otherwise
     '''
-
     # Stop 2 positions before end to avoid index out of bounds
     for index in range(len(seq) - 2):
-        if seq[index:index+3].lower() == 'atg':
+        if seq[index:index+3].lower() == START_CODON:
             return (True, index)  # Return immediately when found
 
     return (False, None)  # Return False and None if not found
             
 
-def list_start(some_list):
-    '''finds strings in list that may have a start codon'''
-
-    start_results = []
+def list_start(some_list: List[str]) -> List[Tuple[bool, Optional[int]]]:
+    '''Finds strings in list that may have a start codon.
     
-    for seq in some_list:
-        start_results.append(string_start(seq)) 
+    Args:
+        some_list: List of DNA sequence strings
+        
+    Returns:
+        List of tuples (found: bool, location: Optional[int]) for each sequence
+    '''
+    # Optimized: use list comprehension
+    return [string_start(seq) for seq in some_list]
 
-    return start_results
 
-
-def seq_analyzer(some_list):
+def seq_analyzer(some_list: List[str]) -> None:
     '''uses above defined functions to evaluate seqs in list'''
     
     print("")

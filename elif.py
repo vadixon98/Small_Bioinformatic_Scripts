@@ -1,6 +1,7 @@
+from typing import Union
 
 
-def ORFadviser(dna):
+def ORFadviser(dna: str) -> str:
     '''Takes a string called DNA as input and validates if it's an ORF.
     
     The function returns the string 'This is an ORF' if the input string satisfies all three of the conditions required of ORFs.
@@ -33,7 +34,7 @@ def ORFadviser(dna):
         return 'The string is not of the correct length.'
 
 
-def friendly(greeting):
+def friendly(greeting: str) -> str:
     '''takes a string named greeting as input. If the greeting begins with the words 'Hello' or 'Hi', the function returns some friendly greeting string of your choice. Otherwise, if the greeting string ends with a question mark, the function returns the string 'Good question!'. Otherwise, the function returns with some string indicating that it didn't understand the greeting (e.g., 'I am sorry, but I did not understand you)'''
     if greeting.startswith('Hello') or greeting.startswith('Hi'):
         return "Hello, hope you are doing well!"

@@ -1,5 +1,7 @@
+from typing import Union
 
-def loadSeq(fileName):
+
+def loadSeq(fileName: Union[str, bytes]) -> str:
     """Load sequence from a fasta file with a single entry.
     
     Args:
@@ -26,9 +28,8 @@ def loadSeq(fileName):
         raise ValueError(f"File '{fileName}' is empty")
     
     # combine lines, skipping first (header line)
-    seq = ""
-    for line in linesL[1:]:
-        seq += line.rstrip()
+    # Optimized: use join instead of string concatenation
+    seq = ''.join(line.rstrip() for line in linesL[1:])
     
     # Check if we got any sequence data
     if len(seq) == 0:

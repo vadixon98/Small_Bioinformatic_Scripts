@@ -1,6 +1,9 @@
 # Problem 4 4a. below. Preparing for loops
 
-def count(letter, string):
+from typing import Union
+
+
+def count(letter: str, string: str) -> int:
     '''takes a letter as input (a string with just one symbol in it) and returns the number of times that the given letter appears in the given string.
     
     Args:
