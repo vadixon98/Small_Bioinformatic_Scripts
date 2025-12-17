@@ -5,15 +5,17 @@ from aminoAcids import *
 
 def compBase(N):
      '''takes a string that is a single DNA base "A", "G", "T", or "C" as input and returns the base that is complementary to it'''
-     for base in N:
-         if N == 'A':
-             return 'T'
-         elif N == 'T':
-            return 'A'
-         elif N == 'C':
-             return 'G'
-         elif N == 'G':
-             return 'C'
+     N = N.upper()
+     if N == 'A':
+         return 'T'
+     elif N == 'T':
+         return 'A'
+     elif N == 'C':
+         return 'G'
+     elif N == 'G':
+         return 'C'
+     else:
+         return 'N'  # Return 'N' for invalid bases
 
 compBase("A")
 'T'
@@ -51,6 +53,7 @@ reverseComplement("TTGAC")
 
 def amino(codon):
     '''takes as input a codon string (a string of three letters) and returns the corresponding amino acid. '''
+    codon = codon.upper()
     # List of codons and their corresponding amino acids
     aa = ['F', 'L', 'I', 'M', 'V', 'S', 'P', 'T', 'A', 'Y', '|', 'H', 'Q', 'N', 'K', 'D', 'E', 'C', 'W', 'R', 'G']
     codons = [
@@ -63,6 +66,7 @@ def amino(codon):
     for i in range(len(aa)):
         if codon in codons[i]:
             return aa[i]
+    return 'X'  # Return 'X' for unknown/invalid codons
 
         
 amino('ACC')
@@ -72,10 +76,13 @@ amino('ACC')
 
 def codingStrandToAA(DNA):
     '''takes a sequence of DNA nucleotides from the coding strand and returns the corresponding amino acids as a string'''
+    DNA = DNA.upper()
     protein = ''
-    for i in range(0, len(DNA), 3):
+    # Only process complete codons (length must be multiple of 3)
+    for i in range(0, len(DNA) - len(DNA) % 3, 3):
         codon = DNA[i:i+3]
-        protein += amino(codon)
+        if len(codon) == 3:  # Only process complete codons
+            protein += amino(codon)
     return protein
 
 codingStrandToAA("AGTCCCGGGTTT")

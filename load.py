@@ -1,10 +1,10 @@
 
 def loadSeq(fileName):
     """Load sequence from a fasta file with a single entry."""
-    f=open(fileName,"r")
-    linesL=f.readlines()
+    with open(fileName, "r") as f:
+        linesL = f.readlines()
     # combine lines, skipping first
-    seq=""
+    seq = ""
     for line in linesL[1:]:
-        seq+=line.rstrip()
-    return(seq)
+        seq += line.rstrip()
+    return seq

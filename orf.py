@@ -1,11 +1,15 @@
 from dna import *
 
+# Define stop codons
+STOP_CODONS = ['TAA', 'TAG', 'TGA']
+stopList = STOP_CODONS  # For backward compatibility
+
 def restOfORF(DNA):
     """Takes a sequence starting with an ATG and finds first stop
     codon. Returns ORF. If no in-frame stop codon, return whole
     sequence."""
-    for i in range(0,len(DNA),3):
-        if DNA[i:(i+3)] in stopList:
+    for i in range(0, len(DNA), 3):
+        if DNA[i:(i+3)].upper() in stopList:
             seq=DNA[:i]
             return seq
     return DNA
@@ -14,8 +18,8 @@ def oneFrame(DNA):
     """Begining at the start of DNA, searches that one frame for all
     ORFs. Returns their seqs as list."""
     seqL = []
-    for i in range(0,len(DNA),3):
-        if DNA[i:i+3] == "ATG":
+    for i in range(0, len(DNA), 3):
+        if DNA[i:i+3].upper() == "ATG":
             seq = restOfORF(DNA[i:])
             seqL = seqL + [seq]
     return seqL

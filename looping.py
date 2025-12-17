@@ -22,7 +22,7 @@ def getLength(DNAlist,length):
     result = []
     for dna_string in DNAlist:
         if len(dna_string) == length:
-            result. append(dna_string)
+            result.append(dna_string)
     return result
 
 getLength(["ATA", "ATCG", "TTT", "A"], 3)

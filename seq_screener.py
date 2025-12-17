@@ -78,10 +78,12 @@ def string_start(seq):
     got_start = 'no'
     start_location = 'none'
 
-    for index in range(len(seq)+1):
-        if seq[index:index+3] == 'atg':
+    # Stop 2 positions before end to avoid index out of bounds
+    for index in range(len(seq) - 2):
+        if seq[index:index+3].lower() == 'atg':
             got_start = 'yes'
             start_location = index
+            break  # Stop after finding first match
 
     return got_start, start_location
             
