@@ -4,7 +4,20 @@
 from aminoAcids import *
 
 def compBase(N):
-     '''takes a string that is a single DNA base "A", "G", "T", or "C" as input and returns the base that is complementary to it'''
+     '''takes a string that is a single DNA base "A", "G", "T", or "C" as input and returns the base that is complementary to it
+     
+     Args:
+         N: Single DNA base character
+         
+     Returns:
+         str: Complementary base, or 'N' for invalid bases
+     '''
+     # Input validation
+     if not isinstance(N, str):
+         raise TypeError("N must be a string")
+     if len(N) != 1:
+         raise ValueError("N must be a single character")
+     
      N = N.upper()
      if N == 'A':
          return 'T'
@@ -17,11 +30,6 @@ def compBase(N):
      else:
          return 'N'  # Return 'N' for invalid bases
 
-compBase("A")
-'T'
-compBase("T")
-'A'
-
 # Problem 2 next smaller function
 # Problem 2 reverse complementary DNA string
 
@@ -31,9 +39,6 @@ def reverse(s):
     for char in s:
         reversed_string = char + reversed_string
     return reversed_string
-
-reverse("spam")
-'maps'
 
 # Problem 2 next smaller function
 # Problem 2 reverse complementary DNA string
@@ -46,13 +51,23 @@ def reverseComplement(DNA):
     comp_DNA = ''.join(compBase(N) for N in reversed_DNA)
     return comp_DNA
 
-reverseComplement("TTGAC")
-'GTCAA'
-
 # Problem 2 amino codon function
 
 def amino(codon):
-    '''takes as input a codon string (a string of three letters) and returns the corresponding amino acid. '''
+    '''takes as input a codon string (a string of three letters) and returns the corresponding amino acid.
+    
+    Args:
+        codon: Three-letter DNA codon string
+        
+    Returns:
+        str: Single-letter amino acid code, or 'X' for unknown/invalid codons
+    '''
+    # Input validation
+    if not isinstance(codon, str):
+        raise TypeError("codon must be a string")
+    if len(codon) != 3:
+        raise ValueError(f"codon must be exactly 3 characters, got {len(codon)}")
+    
     codon = codon.upper()
     # List of codons and their corresponding amino acids
     aa = ['F', 'L', 'I', 'M', 'V', 'S', 'P', 'T', 'A', 'Y', '|', 'H', 'Q', 'N', 'K', 'D', 'E', 'C', 'W', 'R', 'G']
@@ -68,10 +83,6 @@ def amino(codon):
             return aa[i]
     return 'X'  # Return 'X' for unknown/invalid codons
 
-        
-amino('ACC')
-'T'
-
 # Problem 2 Final function, calling amino codon function to return amino acid string
 
 def codingStrandToAA(DNA):
@@ -85,8 +96,25 @@ def codingStrandToAA(DNA):
             protein += amino(codon)
     return protein
 
-codingStrandToAA("AGTCCCGGGTTT")
-'SPGF'
-codingStrandToAA("ATGCAACAGCTC")
-'MQQL'
+
+# Test code (run only when script is executed directly)
+if __name__ == '__main__':
+    # Test compBase
+    assert compBase("A") == 'T'
+    assert compBase("T") == 'A'
+    
+    # Test reverse
+    assert reverse("spam") == 'maps'
+    
+    # Test reverseComplement
+    assert reverseComplement("TTGAC") == 'GTCAA'
+    
+    # Test amino
+    assert amino('ACC') == 'T'
+    
+    # Test codingStrandToAA
+    assert codingStrandToAA("AGTCCCGGGTTT") == 'SPGF'
+    assert codingStrandToAA("ATGCAACAGCTC") == 'MQQL'
+    
+    print("All tests passed!")
 

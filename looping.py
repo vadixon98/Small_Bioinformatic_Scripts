@@ -8,13 +8,6 @@ def countLength(dnaList, length):
             counter = counter + 1
     return counter
 
-dnaList = ['AAA', 'ACGAC','CG', 'TCA']
-
-countLength(dnaList, 4)
-0
-countLength(dnaList,3)
-2
-
 # Problem 1b.
 
 def getLength(DNAlist,length):
@@ -25,9 +18,6 @@ def getLength(DNAlist,length):
             result.append(dna_string)
     return result
 
-getLength(["ATA", "ATCG", "TTT", "A"], 3)
-['ATA', 'TTT']
-
 # Problem 1c.
 
 def factorial(n):
@@ -37,10 +27,21 @@ def factorial(n):
         counter *= i
     return counter
 
-factorial(1)
-1
-factorial(3)
-6
-factorial(4)
-24
+
+# Test code (run only when script is executed directly)
+if __name__ == '__main__':
+    # Test countLength
+    dnaList = ['AAA', 'ACGAC', 'CG', 'TCA']
+    assert countLength(dnaList, 4) == 0
+    assert countLength(dnaList, 3) == 2
+    
+    # Test getLength
+    assert getLength(["ATA", "ATCG", "TTT", "A"], 3) == ['ATA', 'TTT']
+    
+    # Test factorial
+    assert factorial(1) == 1
+    assert factorial(3) == 6
+    assert factorial(4) == 24
+    
+    print("All tests passed!")
 

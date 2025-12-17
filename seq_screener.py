@@ -27,12 +27,12 @@
 # my_list = ['gtaccgt', 'gtaccca', 'ttacatg', 'acgggac']
 
 def t_finder(some_list):
-    ''' finds number of strings with >= 2 ts'''
+    ''' finds number of strings with >= 2 ts (case-insensitive)'''
     
     counter = 0
     
     for seq in some_list:
-        num_ts = seq.count('t')
+        num_ts = seq.lower().count('t')
         if num_ts >= 2:
             counter = counter + 1
 
@@ -40,13 +40,14 @@ def t_finder(some_list):
 
 
 def GC_maker(some_list):
-    '''finds GC content of strings in a list'''  
+    '''finds GC content of strings in a list (case-insensitive)'''  
 
     GC_results = []
 
     for seq in some_list:
-        num_cs = seq.count('c')
-        num_gs = seq.count('g')
+        seq_lower = seq.lower()
+        num_cs = seq_lower.count('c')
+        num_gs = seq_lower.count('g')
         GC_count = num_cs + num_gs
         GC_results.append(GC_count)
 
@@ -54,7 +55,7 @@ def GC_maker(some_list):
 
 
 def GC_rich(some_list):
-    '''finds GC rich strings in a list'''
+    '''finds GC rich strings in a list (case-insensitive, threshold >= 55%)'''
     
     # this function uses the round() function
     # round() shortens a float to fewer digits
@@ -62,30 +63,34 @@ def GC_rich(some_list):
     GC_much = []
 
     for seq in some_list:
-        num_cs = seq.count('c')
-        num_gs = seq.count('g')
+        if len(seq) == 0:  # Handle empty strings
+            continue
+        seq_lower = seq.lower()
+        num_cs = seq_lower.count('c')
+        num_gs = seq_lower.count('g')
         GC_count = num_cs + num_gs
         GC_perc = 100 * (GC_count / len(seq))
         if GC_perc >= 55:
-            GC_much.append(round(GC_perc,2))
+            GC_much.append(round(GC_perc, 2))
 
     return GC_much
 
 
 def string_start(seq):
-    '''checks string for potential start codon'''
-
-    got_start = 'no'
-    start_location = 'none'
+    '''checks string for potential start codon (case-insensitive)
+    
+    Returns:
+        tuple: (found: bool, location: int or None)
+            found: True if start codon found, False otherwise
+            location: Index of start codon if found, None otherwise
+    '''
 
     # Stop 2 positions before end to avoid index out of bounds
     for index in range(len(seq) - 2):
         if seq[index:index+3].lower() == 'atg':
-            got_start = 'yes'
-            start_location = index
-            break  # Stop after finding first match
+            return (True, index)  # Return immediately when found
 
-    return got_start, start_location
+    return (False, None)  # Return False and None if not found
             
 
 def list_start(some_list):
@@ -123,7 +128,12 @@ def seq_analyzer(some_list):
     print("For each seq here are: (1) whether a possible start is")
     print("present, and (2) if so, its location in seq:")
     print("")
-    print(list_start(some_list))
+    start_results = list_start(some_list)
+    for i, (found, location) in enumerate(start_results):
+        if found:
+            print(f"Sequence {i+1}: Start codon found at position {location}")
+        else:
+            print(f"Sequence {i+1}: No start codon found")
     print("")
         
 
