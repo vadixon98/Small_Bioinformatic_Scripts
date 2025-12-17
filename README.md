@@ -1,170 +1,275 @@
-# Small Bioinformatic Scripts
+<div align="center">
 
-A collection of small R and Python utilities for sequence analysis, including polymorphic site detection, alignment-based polymorphism, and various sequence and text processing scripts.
+# 🧬 Small Bioinformatic Scripts
+
+**A collection of powerful R and Python utilities for sequence analysis and bioinformatics**
+
+[![R](https://img.shields.io/badge/R-3.6+-blue?logo=r)](https://www.r-project.org/)
+[![Python](https://img.shields.io/badge/Python-3.x-green?logo=python)](https://www.python.org/)
+[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Bioinformatics](https://img.shields.io/badge/Bioinformatics-Sequence%20Analysis-purple)](https://github.com)
+
+</div>
 
 ---
 
-## Requirements
+## 📋 Overview
+
+This repository contains a curated collection of **R** and **Python** utilities designed for sequence analysis, including:
+
+- 🔍 **Polymorphic site detection** in sequence alignments
+- 📊 **Alignment-based polymorphism** analysis
+- 🧪 **Sequence processing** and manipulation tools
+- 🎯 **ORF detection** and analysis
+- 🧮 **Motif scoring** and pattern matching
+
+---
+
+## ⚙️ Requirements
+
+### R Dependencies
 
 * **R** (version 3.6 or higher)
-* CRAN packages:
+* Required CRAN packages:
+  - 📦 `seqinr` - for reading alignment files
+  - 📦 `adegenet` - for `alignment2genind` and `isPoly` functions
 
-  * `seqinr` (for reading alignment files)
-  * `adegenet` (for `alignment2genind` and `isPoly` functions)
-
-Ensure these packages are installed before running the scripts:
+**Installation:**
 
 ```r
 install.packages(c("seqinr", "adegenet"))
 ```
 
+### Python Dependencies
+
+* **Python** 3.x (standard library only for most scripts)
+
 ---
 
-## Scripts Overview
+## 🚀 Quick Start
 
-All functionality can be placed into a single R script (e.g., `polymorphism_analysis.R`), or sourced interactively.
+### R Scripts
 
-### 1. `calc_segsites(fn = "bigcats")`
+```r
+# Source the main analysis script
+source("polymorphism_analysis.R")
+
+# Count segregating sites
+n_segsites <- calc_segsites("bigcats")
+print(n_segsites)
+```
+
+### Python Scripts
+
+```python
+# Import and use utilities
+from dna import reverseComplement, codingStrandToAA
+from orf import longestORF
+
+# Example usage
+dna_seq = "ATGCGATCG"
+rev_comp = reverseComplement(dna_seq)
+```
+
+---
+
+## 📚 Scripts Overview
+
+### 🔬 R Scripts
+
+#### 1. `calc_segsites(fn = "bigcats")`
 
 Counts segregating (polymorphic) sites in a tab-delimited file of sequences.
 
-* **Input**: A file (default `bigcats`) with header and a column named `seqs`, where each entry is a sequence string of equal length.
-* **Behavior**:
+**Features:**
+- ✅ Reads tab-delimited sequence files
+- ✅ Compares sequences position-by-position
+- ✅ Returns total count of polymorphic sites
 
-  1. Reads the table into `dat`.
-  2. Splits each sequence into individual characters.
-  3. Iterates over each position, comparing all sequences to the first as reference.
-  4. Increments count when any sequence differs from reference at that site.
-* **Output**: Returns the total number of segregating sites (integer).
+**Input Format:**
+- File with header containing a column named `seqs`
+- Each entry is a sequence string of equal length
 
-**Usage example**:
+**Workflow:**
+1. 📥 Reads the table into `dat`
+2. 🔪 Splits each sequence into individual characters
+3. 🔄 Iterates over each position, comparing all sequences to the first as reference
+4. ➕ Increments count when any sequence differs from reference at that site
+
+**Output:** Returns the total number of segregating sites (integer)
+
+**Example:**
 
 ```r
-# In R:
-source("polymorphism_analysis.R")
-# Count sites in default file:
+# Count sites in default file
 n_segsites <- calc_segsites()
 print(n_segsites)
-# Or specify a different filename:
+
+# Or specify a different filename
 n_segsites2 <- calc_segsites("my_sequences.txt")
 ```
 
-### 2. Alignment-based Polymorphism Detection
+---
+
+#### 2. Alignment-based Polymorphism Detection
 
 Leverages `seqinr` and `adegenet` to read a multiple sequence alignment and flag polymorphic loci.
 
-* **Input**: A Clustal-format alignment file (e.g., `feliformia.aln`).
-* **Workflow**:
+**Input:** Clustal-format alignment file (e.g., `feliformia.aln`)
 
-  1. **Read alignment**:
+**Workflow:**
 
-     ```r
-     ```
-
-dat <- read.alignment("feliformia.aln", format = "clustal")
-
-````
-  2. **Convert to genind object**:
-     ```r
-dat2 <- alignment2genind(dat)
-````
-
-3. **Identify polymorphic sites**:
-
+1. **📖 Read alignment:**
    ```r
+   dat <- read.alignment("feliformia.aln", format = "clustal")
    ```
 
-poly\_flags <- isPoly(dat2, by = "loc")
+2. **🔄 Convert to genind object:**
+   ```r
+   dat2 <- alignment2genind(dat)
+   ```
 
-````
-     `poly_flags` is a logical vector where `TRUE` indicates a polymorphic site.
-  4. **Summarize**:
-     ```r
-n_poly <- sum(poly_flags)
-print(n_poly)
-summary(dat2)
-````
+3. **🔍 Identify polymorphic sites:**
+   ```r
+   poly_flags <- isPoly(dat2, by = "loc")
+   ```
+   `poly_flags` is a logical vector where `TRUE` indicates a polymorphic site.
 
-**Usage example**:
+4. **📊 Summarize:**
+   ```r
+   n_poly <- sum(poly_flags)
+   print(n_poly)
+   summary(dat2)
+   ```
+
+**Complete Example:**
 
 ```r
-# Assuming script is sourced or in R console:
-source("polymorphism_analysis.R")  # defines helper functions
-# Read and analyze alignment:
+# Read and analyze alignment
 alignment_data <- read.alignment("feliformia.aln", format = "clustal")
 genind_obj <- alignment2genind(alignment_data)
 poly_sites <- isPoly(genind_obj, by = "loc")
+
 cat("Number of polymorphic loci:", sum(poly_sites), "\n")
 cat("Total loci:", length(poly_sites), "\n")
 ```
 
 ---
 
-## Python Scripts Overview
+### 🐍 Python Scripts
 
-In addition to R routines, this project includes the following Python utilities for sequence and text processing:
+#### 📊 Core Utilities
 
-* **count.py**: `count(letter, string)` counts occurrences of `letter` in a given `string`. fileciteturn5file0
-* **dna.py**:
+| Script | Functions | Description |
+|--------|-----------|-------------|
+| **`count.py``** | `count(letter, string)` | Counts occurrences of a letter in a string |
+| **`dna.py`** | `compBase(N)`, `reverse(s)`, `reverseComplement(DNA)`, `amino(codon)`, `codingStrandToAA(DNA)` | DNA sequence manipulation and translation |
+| **`load.py`** | `loadSeq(fileName)` | Loads a single-entry FASTA and returns the sequence string |
 
-  * `compBase(N)`: returns the complementary DNA base.
-  * `reverse(s)`: reverses a string.
-  * `reverseComplement(DNA)`: returns the reverse complement of a DNA string.
-  * `amino(codon)`: translates a codon to its amino acid.
-  * `codingStrandToAA(DNA)`: converts a DNA coding strand to an amino acid sequence. fileciteturn5file1turn5file3
-* **elif.py**:
+#### 🧬 DNA Analysis
 
-  * `ORFadviser(dna)`: checks if a DNA string is a valid ORF (start codon, stop codon, length multiple of 3).
-  * `friendly(greeting)`: responds to greetings or questions. fileciteturn5file2
-* **looping.py**:
+**`dna.py`** - Comprehensive DNA sequence utilities:
 
-  * `countLength(dnaList, length)`: counts strings of a given length in a list.
-  * `getLength(DNAlist, length)`: returns list of strings matching a specified length.
-  * `factorial(n)`: computes `n!`. fileciteturn5file4
-* **load.py**: `loadSeq(fileName)` loads a single-entry FASTA and returns the sequence string. fileciteturn5file5
-* **seq\_screener.py**:
+- `compBase(N)` - Returns the complementary DNA base
+- `reverse(s)` - Reverses a string
+- `reverseComplement(DNA)` - Returns the reverse complement of a DNA string
+- `amino(codon)` - Translates a codon to its amino acid
+- `codingStrandToAA(DNA)` - Converts a DNA coding strand to an amino acid sequence
 
-  * `t_finder(list)`: counts strings with ≥2 't's.
-  * `GC_maker(list)`: computes GC counts for each string.
-  * `GC_rich(list)`: identifies GC-rich strings (≥55%).
-  * `string_start(seq)`: finds potential start codon positions.
-  * `list_start(list)`: applies `string_start` to a list.
-  * `seq_analyzer(list)`: runs all above analyses and prints summaries. fileciteturn5file6
-* **orf.py**:
+#### 🎯 ORF Detection
 
-  * `restOfORF(DNA)`: returns ORF from the first 'ATG' to the first in-frame stop.
-  * `oneFrame(DNA)`: finds all ORFs in the first reading frame.
-  * `longestORF(DNA)`: identifies the longest ORF across all frames. fileciteturn5file8
-* **motif\_scoring.py**:
+**`orf.py`** - Open Reading Frame analysis:
 
-  * `load_motif_profile(path)`: reads a motif scoring matrix.
-  * `load_dna_sequence(path)`: loads and concatenates a FASTA sequence.
-  * `reverse_complement(seq)`: computes the reverse complement.
-  * `score_window(window, profile)`: scores a window against the motif profile.
-  * `main()`: CLI entrypoint to scan a sequence (forward and reverse) and output scores. fileciteturn5file9
+- `restOfORF(DNA)` - Returns ORF from the first 'ATG' to the first in-frame stop
+- `oneFrame(DNA)` - Finds all ORFs in the first reading frame
+- `longestORF(DNA)` - Identifies the longest ORF across all frames
+
+**`elif.py`** - ORF validation:
+
+- `ORFadviser(dna)` - Checks if a DNA string is a valid ORF (start codon, stop codon, length multiple of 3)
+- `friendly(greeting)` - Responds to greetings or questions
+
+#### 🔄 Sequence Processing
+
+**`looping.py`** - List and sequence operations:
+
+- `countLength(dnaList, length)` - Counts strings of a given length in a list
+- `getLength(DNAlist, length)` - Returns list of strings matching a specified length
+- `factorial(n)` - Computes `n!`
+
+#### 🔍 Sequence Screening
+
+**`seq_screener.py`** - Comprehensive sequence analysis:
+
+- `t_finder(list)` - Counts strings with ≥2 't's
+- `GC_maker(list)` - Computes GC counts for each string
+- `GC_rich(list)` - Identifies GC-rich strings (≥55%)
+- `string_start(seq)` - Finds potential start codon positions
+- `list_start(list)` - Applies `string_start` to a list
+- `seq_analyzer(list)` - Runs all above analyses and prints summaries
+
+#### 🎨 Motif Scoring
+
+**`motif_scoring.py`** - Motif pattern matching:
+
+- `load_motif_profile(path)` - Reads a motif scoring matrix
+- `load_dna_sequence(path)` - Loads and concatenates a FASTA sequence
+- `reverse_complement(seq)` - Computes the reverse complement
+- `score_window(window, profile)` - Scores a window against the motif profile
+- `main()` - CLI entrypoint to scan a sequence (forward and reverse) and output scores
 
 ---
 
-## Directory Structure
+## 📁 Directory Structure
 
 ```
-├── data/                   # (Optional) input files, e.g., bigcats, feliformia.aln
-├── polymorphism_analysis.R # R script with analysis functions
-└── results/                # (Optional) output summaries or plots
+Small_Bioinformatic_Scripts/
+│
+├── 📂 data/                      # Input files (e.g., bigcats, feliformia.aln)
+│   ├── bigcats                   # Tab-delimited sequence file
+│   └── feliformia.aln            # Clustal alignment file
+│
+├── 📂 results/                   # Output summaries and plots
+│
+├── 📜 polymorphism_analysis.R    # Main R script with analysis functions
+│
+├── 🐍 Python Scripts/
+│   ├── count.py
+│   ├── dna.py
+│   ├── elif.py
+│   ├── looping.py
+│   ├── load.py
+│   ├── seq_screener.py
+│   ├── orf.py
+│   └── motif_scoring.py
+│
+└── 📄 README.md                  # This file
 ```
 
 ---
 
-## Contributing
+## 🤝 Contributing
 
-Feel free to fork the repository and submit pull requests to:
+We welcome contributions! Feel free to fork the repository and submit pull requests for:
 
-* Add visualization of segregating sites
-* Support additional alignment formats (FASTA, PHYLIP)
-* Integrate minor allele frequency calculations
+- ✨ Add visualization of segregating sites
+- 📈 Support additional alignment formats (FASTA, PHYLIP)
+- 🧮 Integrate minor allele frequency calculations
+- 🐛 Bug fixes and improvements
+- 📝 Documentation enhancements
 
 ---
 
-## License
+## 📄 License
 
-This code is released under the MIT License. Include a copy of the license when distributing.
+This project is licensed under the **MIT License**. See the LICENSE file for details.
+
+---
+
+<div align="center">
+
+**Made with ❤️ for the bioinformatics community**
+
+⭐ Star this repo if you find it useful!
+
+</div>
