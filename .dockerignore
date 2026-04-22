@@ -1,0 +1,11 @@
+.git
+.gitignore
+**/__pycache__
+**/*.pyc
+**/.pytest_cache
+README.md
+IMPROVEMENTS.md
+*.R
+*.r
+data
+results
