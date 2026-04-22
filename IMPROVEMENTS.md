@@ -114,11 +114,11 @@ This document outlines comprehensive improvement suggestions for all scripts in 
   return (True, index) if found else (False, None)
   ```
 
-### 16. **`Polymorphic Site Finder.R`** - Test code in script
+### 16. **`polymorphic_site_finder.R`** - Test code in script
 - **Issue**: Lines 29-34 contain test calls
 - **Fix**: Move to separate test section or comment out
 
-### 17. **`Polymorphic Site Finder.R`** - Missing error handling
+### 17. **`polymorphic_site_finder.R`** - Missing error handling
 - **Issue**: No checks for file existence, equal sequence lengths, etc.
 - **Fix**: Add validation:
   ```r
@@ -335,7 +335,7 @@ if (length(unique(seq_lengths)) > 1) {
 | `orf.py` | 1 (missing import) | 0 | Error handling, documentation |
 | `motif_scoring.py` | 0 | 0 | Type hints, logging |
 | `aminoAcids.py` | 0 | 0 | Documentation |
-| `Polymorphic Site Finder.R` | 0 | 2 (test code, validation) | Documentation, error handling |
+| `polymorphic_site_finder.R` | 0 | 2 (test code, validation) | Documentation, error handling |
 | `Find_LCS.r` | 1 (incomplete) | 0 | Complete implementation |
 
 ---

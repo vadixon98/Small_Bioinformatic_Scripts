@@ -5,9 +5,8 @@
 **R and Python utilities for sequence analysis and common bioinformatics tasks**
 
 [![R](https://img.shields.io/badge/R-3.6+-blue?logo=r)](https://www.r-project.org/)
-[![Python](https://img.shields.io/badge/Python-3.x-green?logo=python)](https://www.python.org/)
+[![Python](https://img.shields.io/badge/Python-3.8+-green?logo=python)](https://www.python.org/)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Bioinformatics](https://img.shields.io/badge/Bioinformatics-Sequence%20Analysis-purple)](https://github.com)
 
 </div>
 
@@ -22,6 +21,8 @@ This repository is a set of **R** and **Python** scripts for working with sequen
 - **Sequence processing** and manipulation
 - **ORF detection** and open reading frame analysis
 - **Motif scoring** and pattern matching
+
+These are **teaching and small-workflow** scripts, not a maintained library or pipeline framework.
 
 ---
 
@@ -42,7 +43,7 @@ install.packages(c("seqinr", "adegenet"))
 
 ### Python
 
-* **Python** 3.x (most scripts use the standard library only)
+* **Python** 3.8 or later (most scripts use the standard library only)
 
 ---
 
@@ -51,8 +52,8 @@ install.packages(c("seqinr", "adegenet"))
 ### R
 
 ```r
-# Source the main analysis script
-source("polymorphism_analysis.R")
+# Segregating-site helper and comments for alignment-based workflow
+source("polymorphic_site_finder.R")
 
 # Count segregating sites
 n_segsites <- calc_segsites("bigcats")
@@ -60,6 +61,8 @@ print(n_segsites)
 ```
 
 ### Python
+
+Run these from the repository root (or add it to `PYTHONPATH`) so modules like `dna` resolve.
 
 ```python
 from dna import reverseComplement, codingStrandToAA
@@ -75,7 +78,7 @@ rev_comp = reverseComplement(dna_seq)
 
 ### R
 
-#### 1. `calc_segsites(fn = "bigcats")`
+#### 1. `calc_segsites(fn = "bigcats")` — `polymorphic_site_finder.R`
 
 Counts segregating (polymorphic) sites in a tab-delimited file of sequences.
 
@@ -154,25 +157,30 @@ cat("Total loci:", length(poly_sites), "\n")
 
 ---
 
+#### 3. `Find_LCS.r` — longest common subsequence
+
+Classical LCS (dynamic programming, CLRS-style) for two strings, useful for comparing sequences at the character level.
+
+- `find_lcs(v, w)` — Builds DP and backtrack tables; returns `s`, `b`, and parsed vectors. Prints lengths of `v` and `w`.
+- `print_lcs(b, v, i, j)` — Prints one LCS by backtracking from `i, j` (e.g. `n+1`, `m+1` for full result).
+- `get_lcs(v, w)` — Returns the LCS as a single string (e.g. `get_lcs("AAACGTA", "ACCGGTAATCGAA")`).
+
+---
+
 ### Python
 
 #### Core utilities
 
 | Script | Functions | Description |
 |--------|-----------|-------------|
+| **`aminoAcids.py`** | (data: `aa`, `codons`) | One-letter amino acid order and codon groups for the standard code |
 | **`count.py`** | `count(letter, string)` | Counts occurrences of a character in a string |
 | **`dna.py`** | `compBase(N)`, `reverse(s)`, `reverseComplement(DNA)`, `amino(codon)`, `codingStrandToAA(DNA)` | DNA utilities and translation |
 | **`load.py`** | `loadSeq(fileName)` | Loads a single-entry FASTA and returns the sequence string |
 
 #### DNA
 
-**`dna.py`**
-
-- `compBase(N)` — Complementary base
-- `reverse(s)` — String reversal
-- `reverseComplement(DNA)` — Reverse complement
-- `amino(codon)` — Codon to amino acid
-- `codingStrandToAA(DNA)` — Coding strand to amino acid sequence
+**`dna.py`** — see the table above; implementation details and edge cases are in the module source.
 
 #### ORF detection
 
@@ -220,19 +228,19 @@ cat("Total loci:", length(poly_sites), "\n")
 
 ## Directory structure
 
+Create `data/` and `results/` locally if you use the example paths in the notes above. They are not always committed.
+
 ```
 Small_Bioinformatic_Scripts/
 │
-├── data/                        # Example inputs (e.g. bigcats, feliformia.aln)
+├── data/                        # Example inputs (e.g. bigcats, feliformia.aln), optional
 │   ├── bigcats
 │   └── feliformia.aln
 │
-├── results/                     # Output summaries and plots
+├── results/                     # Output summaries and plots, optional
 │
-├── polymorphism_analysis.R      # R analysis (see Quick start)
-│
-├── Find_LCS.r
-├── Polymorphic Site Finder.R
+├── polymorphic_site_finder.R    # calc_segsites; alignment workflow comments (see Quick start)
+├── Find_LCS.r                   # LCS (DP)
 │
 ├── aminoAcids.py
 ├── count.py
@@ -251,7 +259,7 @@ Small_Bioinformatic_Scripts/
 
 ## Contributing
 
-Contributions are welcome via issues and pull requests. Suggestions that fit the scope of the repo include:
+Contributions are welcome via issues and pull requests. A larger backlog of possible fixes lives in [IMPROVEMENTS.md](IMPROVEMENTS.md). Suggestions that fit the scope of the repo include:
 
 - Visualizations of segregating sites
 - Support for more alignment formats (e.g. FASTA, PHYLIP)
