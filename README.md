@@ -223,15 +223,16 @@ cat("Total loci:", length(poly_sites), "\n")
 ```
 Small_Bioinformatic_Scripts/
 │
-├── data/                       # Example inputs (e.g. bigcats, feliformia.aln)
+├── data/                        # Example inputs (e.g. bigcats, feliformia.aln)
 │   ├── bigcats
 │   └── feliformia.aln
 │
-├── results/                    # Outputs, summaries, figures
+├── results/                     # Output summaries and plots
+│
+├── polymorphism_analysis.R      # R analysis (see Quick start)
 │
 ├── Find_LCS.r
 ├── Polymorphic Site Finder.R
-├── polymorphism_analysis.R     # Referenced in Quick start; add or rename to match your layout
 │
 ├── aminoAcids.py
 ├── count.py
@@ -239,8 +240,8 @@ Small_Bioinformatic_Scripts/
 ├── elif.py
 ├── looping.py
 ├── load.py
-├── seq_screener.py
 ├── orf.py
+├── seq_screener.py
 ├── motif_scoring.py
 │
 └── README.md
