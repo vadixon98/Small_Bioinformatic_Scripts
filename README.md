@@ -72,6 +72,25 @@ dna_seq = "ATGCGATCG"
 rev_comp = reverseComplement(dna_seq)
 ```
 
+### Docker (Python)
+
+The repository includes a `Dockerfile` that packages the top-level Python modules in a **Python 3.12** image. **R is not included** in that image; use a local R install or extend the image if you need the R scripts.
+
+From the repository root, build and run:
+
+```bash
+docker build -t small-bioinformatic-scripts .
+docker run --rm small-bioinformatic-scripts
+```
+
+The default container command runs a short import check (`dna.reverseComplement`). Override the command to run another script or an interactive shell, for example:
+
+```bash
+docker run --rm -it small-bioinformatic-scripts python3 -c "from orf import longestORF; print(longestORF('ATGTAATAG'))"
+```
+
+Rebuild the image after you change any `*.py` files at the repo root, since they are copied into the image at build time.
+
 ---
 
 ## Scripts
@@ -252,6 +271,7 @@ Small_Bioinformatic_Scripts/
 ├── seq_screener.py
 ├── motif_scoring.py
 │
+├── Dockerfile                   # Python 3.12 image for *.py scripts
 └── README.md
 ```
 
