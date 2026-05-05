@@ -320,6 +320,28 @@ if (length(unique(seq_lengths)) > 1) {
       # process
   ```
 
+### 31. **Docker containerization (next steps)**
+
+The repo already has a `Dockerfile` and `.github/workflows/docker-image.yml`. Below matches the comment checklists in those files.
+
+#### Docker CI (`.github/workflows/docker-image.yml`)
+
+- Pin base image digests in Dockerfile for reproducible builds, then verify here.
+- Log in to a registry (e.g. GHCR) and push tags on release or on main (needs write permissions + secrets).
+- Replace generic tag `my-image-name` with the real image name and semantic tags (e.g. `${{ github.sha }}`, `latest` on main).
+- Use `docker/build-push-action` with cache (`gha`) to speed up repeated builds.
+- Fail fast: add a step that runs the same smoke test as Dockerfile `CMD` or pytest if tests exist.
+- Optional: matrix build for multiple Python versions only if you maintain compatibility guarantees.
+
+#### `Dockerfile`
+
+- Add `requirements.txt` (or `pyproject.toml`) if you introduce non-stdlib deps; `COPY` + `pip install -r` in this file.
+- Run as non-root: create a user, `COPY --chown`, `USER` before `CMD` (matches many cluster/Kubernetes policies).
+- Multi-stage: optional builder stage if you later compile wheels or pin tools; final stage stays slim.
+- R workflows: separate `Dockerfile.r` or `rocker/r-ver` base + `install.packages(c("seqinr", "adegenet"))`.
+- `docker-compose.yml`: services for CLI runs with volumes `./data:/data` for inputs and reproducible one-liners.
+- Optional: `HEALTHCHECK` only if you add a long-running service (not needed for one-shot script containers).
+
 ---
 
 ## 📊 Summary by Script
