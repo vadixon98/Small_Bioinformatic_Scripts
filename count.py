@@ -23,9 +23,9 @@ def count(letter: str, string: str) -> int:
     if len(letter) != 1:
         raise ValueError("letter must be a single character")
     
-    count = 0
+    total = 0
     for char in string:
         if char == letter:
-            count += 1
-    return count
+            total += 1
+    return total
 

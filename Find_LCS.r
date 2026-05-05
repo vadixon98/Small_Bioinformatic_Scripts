@@ -7,8 +7,8 @@ find_lcs <- function(v, w)   # run by passing string literals -- e.g., find_lcs(
   w <- strsplit(w, "")[[1]]   # strsplit returns a list; [[1]] extracts the character vector
   n <- length(v)              # length of first sequence
   m <- length(w)              # length of second sequence
-  print(n)                    # lengths for reference when calling print_lcs()
-  print(m)
+  # print(n)                    # lengths for reference when calling print_lcs()
+  # print(m)
   
   s <- matrix(0, nrow=n+1, ncol=m+1)  # dynamic programming table: s[i,j] = LCS length of v[1..i-1] and w[1..j-1]
   b <- matrix(0, nrow=n+1, ncol=m+1)  # backtracking pointers: 1=up, 2=left, 3=diagonal

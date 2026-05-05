@@ -72,22 +72,33 @@ def main():
     print(f"Scanning sequence of length {seq_len} with motif length {motif_len}...")
 
     # Prepare output handle
-    out_fh = open(out_path, 'w', newline='') if out_path else sys.stdout
-    writer = csv.writer(out_fh, delimiter='\t')
-    writer.writerow(["position", "score_forward", "score_reverse", "score_best"])
-
-    # Scan windows
-    for pos in range(seq_len - motif_len + 1):
-        window = sequence[pos:pos + motif_len]
-        sf = score_window(window, profile)
-        rcw = reverse_complement(window)
-        sr = score_window(rcw, profile)
-        sb = max(sf, sr)
-        writer.writerow([pos, f"{sf:.4f}", f"{sr:.4f}", f"{sb:.4f}"])
-
     if out_path:
-        out_fh.close()
+        with open(out_path, 'w', newline='') as out_fh:
+            writer = csv.writer(out_fh, delimiter='\t')
+            writer.writerow(["position", "score_forward", "score_reverse", "score_best"])
+
+            # Scan windows
+            for pos in range(seq_len - motif_len + 1):
+                window = sequence[pos:pos + motif_len]
+                sf = score_window(window, profile)
+                rcw = reverse_complement(window)
+                sr = score_window(rcw, profile)
+                sb = max(sf, sr)
+                writer.writerow([pos, f"{sf:.4f}", f"{sr:.4f}", f"{sb:.4f}"])
+
         print(f"Results written to {out_path}")
+    else:
+        writer = csv.writer(sys.stdout, delimiter='\t')
+        writer.writerow(["position", "score_forward", "score_reverse", "score_best"])
+
+        # Scan windows
+        for pos in range(seq_len - motif_len + 1):
+            window = sequence[pos:pos + motif_len]
+            sf = score_window(window, profile)
+            rcw = reverse_complement(window)
+            sr = score_window(rcw, profile)
+            sb = max(sf, sr)
+            writer.writerow([pos, f"{sf:.4f}", f"{sr:.4f}", f"{sb:.4f}"])
 
 if __name__ == '__main__':
     main()
