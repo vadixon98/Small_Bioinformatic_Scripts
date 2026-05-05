@@ -1,3 +1,11 @@
+# Next steps for Docker CI (pick what fits this repo):
+# - Pin base image digests in Dockerfile for reproducible builds, then verify here.
+# - Log in to a registry (e.g. GHCR) and push tags on release or on main (needs write permissions + secrets).
+# - Replace generic tag my-image-name with the real image name and semantic tags (e.g. ${{ github.sha }}, latest on main).
+# - Use docker/build-push-action with cache (gha) to speed up repeated builds.
+# - Fail fast: add a step that runs the same smoke test as Dockerfile CMD or pytest if tests exist.
+# - Optional: matrix build for multiple Python versions only if you maintain compatibility guarantees.
+
 name: Docker Image CI
 
 on:
